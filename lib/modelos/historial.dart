@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:buscando_farmacias_chilenas/modelos/farmacias_informacion.dart';
 
 class Historial {
@@ -18,7 +19,7 @@ class Historial {
   });
 
   factory Historial.fromJson(Map<String, dynamic> json) {
-    var farmaciasList = json['farmaciasInfo'] as List;
+    var farmaciasList = jsonDecode(json['farmaciasInfo']) as List;
     List<Farmacias_informacion> farmacias = farmaciasList.map((i) => Farmacias_informacion.fromJson(i)).toList();
     return Historial(
       id: json['id'],
@@ -38,7 +39,7 @@ class Historial {
       'accion': accion,
       'fecha': fecha,
       'hora': hora,
-      'farmaciasInfo': farmacias,
+      'farmaciasInfo': jsonEncode(farmacias), // Serializar a JSON
     };
   }
 

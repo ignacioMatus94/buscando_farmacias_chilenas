@@ -5,4 +5,6 @@ class CustomColors {
   static const Color secondaryColor = Color(0xFF50E3C2); // Verde
   static const Color accentColor = Color(0xFFF5A623); // Naranja
   static const Color backgroundColor = Color(0xFFF2F2F2); // Gris claro
+    static const Color backgroundLight = Color(0xFFFFFFFF); // Blanco
+
 }

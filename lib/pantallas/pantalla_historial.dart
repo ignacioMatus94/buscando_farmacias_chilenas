@@ -19,7 +19,6 @@ class PantallaHistorial extends StatefulWidget {
 class PantallaHistorialState extends State<PantallaHistorial> {
   final ServicioBaseDatos _servicioBaseDatos = ServicioBaseDatos();
   late Future<List<Historial>> _futureHistorial;
-  String _searchQuery = '';
   String _selectedFilter = 'Todos';
 
   @override
@@ -40,7 +39,7 @@ class PantallaHistorialState extends State<PantallaHistorial> {
     final now = DateTime.now();
     final fecha = '${now.year}-${now.month}-${now.day}';
     final hora = '${now.hour}:${now.minute}';
-    final accion = 'Visita a farmacias';
+    const accion = 'Visita a farmacias';
     final historial = Historial(
       id: 0,
       idFarmacia: farmacias.first.localId,
@@ -56,26 +55,14 @@ class PantallaHistorialState extends State<PantallaHistorial> {
   }
 
   List<Historial> _filtrarHistorial(List<Historial> historial) {
-    if (_selectedFilter == 'Todos' && _searchQuery.isEmpty) {
+    if (_selectedFilter == 'Todos') {
       return historial;
     }
 
     return historial.where((accion) {
-      final matchesSearchQuery = _searchQuery.isEmpty || accion.accion.toLowerCase().contains(_searchQuery.toLowerCase());
       final matchesFilter = _selectedFilter == 'Todos' || accion.accion == _selectedFilter;
-      return matchesSearchQuery && matchesFilter;
+      return matchesFilter;
     }).toList();
-  }
-
-  void _showSearch() {
-    showSearch(
-      context: context,
-      delegate: HistorialSearchDelegate(_futureHistorial),
-    ).then((query) {
-      setState(() {
-        _searchQuery = query ?? '';
-      });
-    });
   }
 
   void _showFilterOptions() {
@@ -150,9 +137,17 @@ class PantallaHistorialState extends State<PantallaHistorial> {
               ...farmacias.map((farmacia) => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    'Farmacia: ${farmacia.localNombre}',
-                    style: GoogleFonts.roboto(fontSize: 16, color: Colors.grey[600]),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => PantallaDetalles(farmacia: farmacia, farmacias: farmacias)),
+                      );
+                    },
+                    child: Text(
+                      'Farmacia: ${farmacia.localNombre}',
+                      style: GoogleFonts.roboto(fontSize: 16, color: Colors.blue, decoration: TextDecoration.underline),
+                    ),
                   ),
                   Text(
                     'Dirección: ${farmacia.direccion}',
@@ -167,7 +162,7 @@ class PantallaHistorialState extends State<PantallaHistorial> {
                     style: GoogleFonts.roboto(fontSize: 16, color: Colors.grey[600]),
                   ),
                 ],
-              )).toList(),
+              )),
             ],
           ),
           trailing: IconButton(
@@ -227,10 +222,6 @@ class PantallaHistorialState extends State<PantallaHistorial> {
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search, color: Colors.white),
-            onPressed: _showSearch,
-          ),
           IconButton(
             icon: const Icon(Icons.filter_list, color: Colors.white),
             onPressed: _showFilterOptions,
@@ -306,76 +297,5 @@ class PantallaHistorialState extends State<PantallaHistorial> {
         ),
       ),
     );
-  }
-}
-
-class HistorialSearchDelegate extends SearchDelegate<String> {
-  final Future<List<Historial>> futureHistorial;
-
-  HistorialSearchDelegate(this.futureHistorial);
-
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      ),
-    ];
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, '');
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return FutureBuilder<List<Historial>>(
-      future: futureHistorial,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-          return const Center(child: Text('No hay acciones en el historial'));
-        } else {
-          final historial = snapshot.data!.where((accion) {
-            return accion.accion.toLowerCase().contains(query.toLowerCase());
-          }).toList();
-
-          if (historial.isEmpty) {
-            return const Center(child: Text('No se encontraron resultados'));
-          }
-
-          return ListView.builder(
-            itemCount: historial.length,
-            itemBuilder: (context, index) {
-              final accion = historial[index];
-              return ListTile(
-                title: Text(accion.accion),
-                subtitle: Text('Fecha: ${accion.fecha}\nHora: ${accion.hora}'),
-                onTap: () {
-                  close(context, query);
-                },
-              );
-            },
-          );
-        }
-      },
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return Container();
   }
 }

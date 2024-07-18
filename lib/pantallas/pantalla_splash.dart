@@ -1,5 +1,5 @@
+import 'package:buscando_farmacias_chilenas/pantallas/pantalla_bienvenida.dart';
 import 'package:flutter/material.dart';
-import 'pantalla_principal.dart';
 
 class PantallaSplash extends StatefulWidget {
   const PantallaSplash({super.key});
@@ -20,7 +20,7 @@ class PantallaSplashState extends State<PantallaSplash> {
     if (mounted) {
       Navigator.pushReplacement(
         context,
-        MaterialPageRoute(builder: (context) => const PantallaPrincipal()),
+        MaterialPageRoute(builder: (context) => const PantallaBienvenida()),
       );
     }
   }

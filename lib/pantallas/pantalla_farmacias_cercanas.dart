@@ -8,10 +8,10 @@ class PantallaFarmaciasCercanas extends StatefulWidget {
   const PantallaFarmaciasCercanas({super.key});
 
   @override
-  _PantallaFarmaciasCercanasState createState() => _PantallaFarmaciasCercanasState();
+  PantallaFarmaciasCercanasState createState() => PantallaFarmaciasCercanasState();
 }
 
-class _PantallaFarmaciasCercanasState extends State<PantallaFarmaciasCercanas> {
+class PantallaFarmaciasCercanasState extends State<PantallaFarmaciasCercanas> {
   final ServicioLocalizacion _servicioLocalizacion = ServicioLocalizacion();
   late Future<List<Farmacias_informacion>> _farmaciasCercanas;
 
@@ -37,8 +37,9 @@ class _PantallaFarmaciasCercanasState extends State<PantallaFarmaciasCercanas> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Farmacias Cercanas'),
+        backgroundColor: CustomColors.primaryColor,
       ),
-      drawer: const CustomDrawer(),  // Añade el Drawer aquí
+      drawer: const CustomDrawer(),
       body: FutureBuilder<List<Farmacias_informacion>>(
         future: _farmaciasCercanas,
         builder: (context, snapshot) {
@@ -68,8 +69,8 @@ class _PantallaFarmaciasCercanasState extends State<PantallaFarmaciasCercanas> {
                     contentPadding: const EdgeInsets.all(15.0),
                     leading: const CircleAvatar(
                       backgroundColor: CustomColors.primaryColor,
-                      child: Icon(Icons.local_pharmacy, size: 30, color: Colors.white),
                       radius: 30,
+                      child: Icon(Icons.local_pharmacy, size: 30, color: Colors.white),
                     ),
                     title: Text(
                       farmacia.localNombre,

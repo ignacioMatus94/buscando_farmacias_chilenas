@@ -33,7 +33,7 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
     final now = DateTime.now();
     final fecha = '${now.year}-${now.month}-${now.day}';
     final hora = '${now.hour}:${now.minute}';
-    final accion = 'Visita a farmacia';
+    const accion = 'Visita a farmacia';
     final historial = Historial(
       id: 0,
       idFarmacia: farmacia.localId,
@@ -127,7 +127,7 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
               },
             ),
           );
-        }).toList(),
+        }),
       ],
     );
   }
@@ -173,7 +173,7 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
         const SizedBox(height: 10),
         ...farmacias.map((farmacia) {
           return _buildFarmaciaCard(farmacia);
-        }).toList(),
+        }),
       ],
     );
   }

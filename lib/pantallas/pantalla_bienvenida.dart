@@ -1,6 +1,6 @@
+import 'package:buscando_farmacias_chilenas/pantallas/pantalla_about.dart';
 import 'package:flutter/material.dart';
 import 'pantalla_principal.dart';
-import 'pantalla_about.dart';
 
 class PantallaBienvenida extends StatelessWidget {
   const PantallaBienvenida({super.key});

@@ -6,6 +6,7 @@ import 'package:buscando_farmacias_chilenas/pantallas/pantalla_farmacias.dart';
 import 'package:buscando_farmacias_chilenas/pantallas/pantalla_farmacias_cercanas.dart';
 import 'package:buscando_farmacias_chilenas/pantallas/pantalla_bienvenida.dart';
 import 'package:buscando_farmacias_chilenas/pantallas/pantalla_about.dart';
+import 'package:buscando_farmacias_chilenas/pantallas/pantalla_configuracion.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -64,7 +65,7 @@ class CustomDrawer extends StatelessWidget {
             onTap: () {
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => const PantallaFarmacias()),
+                MaterialPageRoute(builder: (context) => const PantallaFarmacias(farmaciasInfo: [],)),
               );
             },
           ),
@@ -95,6 +96,16 @@ class CustomDrawer extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(builder: (context) => const PantallaAbout()),
+              );
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.settings),
+            title: const Text('Configuración'),
+            onTap: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => const PantallaConfiguracion()),
               );
             },
           ),
