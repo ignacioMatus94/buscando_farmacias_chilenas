@@ -41,8 +41,7 @@
    - Debe proporcionar formularios para agregar o editar perfiles, y la capacidad de eliminar perfiles.
 
 9. **Pantalla de Configuración:**
-   - La aplicación debe ofrecer opciones para gestionar la base de datos, incluyendo eliminarla y crear una nueva.
-   - Debe permitir la persistencia de datos iniciales en la base de datos.
+   - La aplicación debe ofrecer opciones para gestionar el perfil de usuario y ver el about.
 
 10. **Pantalla de Acerca de:**
     - La aplicación debe mostrar información sobre el equipo de desarrollo y agradecimientos.
@@ -86,3 +85,8 @@
     - La aplicación debe poder manejar un aumento en la cantidad de datos o usuarios sin una disminución significativa en el rendimiento.
 
 Estos requisitos aseguran que la aplicación "Buscando Farmacias Chilenas" sea funcional, segura y agradable para los usuarios, además de ser mantenible y escalable para el equipo de desarrollo.
+
+
+API TEST: https://drive.google.com/file/d/1IGz0DZzuFTY1V-LSj60ZxSiseX_SOjCd/view?usp=sharing
+
+VIDEO: 
