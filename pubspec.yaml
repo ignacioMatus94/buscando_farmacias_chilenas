@@ -27,7 +27,8 @@ dependencies:
 
   # Dependencia para abrir URLs
   url_launcher: ^6.1.7
-
+  share: ^2.0.4
+  
   # Dependencia para geocoding
   geocoding: ^3.0.0
 
@@ -36,6 +37,18 @@ dependencies:
 
   # Dependencia para splash screen
   flutter_native_splash: ^2.0.5+1
+  
+  # Dependencia para audio
+  audioplayers: ^6.0.0
+  flutter_sound: ^9.0.9
+  flutter_sound_platform_interface: ^9.0.9
+  flutter_sound_web: ^9.0.9
+
+  # Dependencia para el logger
+  logger: ^1.1.0  
+
+  # Dependencia para cambiar el nombre del paquete de la aplicación
+  change_app_package_name: ^1.3.0
 
 dev_dependencies:
   flutter_test:
@@ -47,6 +60,7 @@ flutter:
 
   assets:
     - assets/ministerio.png
+    - assets/music/musica_fondo.mp3
 
 flutter_native_splash:
   color: "#ffffff"

@@ -81,7 +81,7 @@ class CustomDrawer extends StatelessWidget {
           ),
           ListTile(
             leading: const Icon(Icons.info),
-            title: const Text('Bienvenida'),
+            title: const Text('Bienvenido'),
             onTap: () {
               Navigator.pushReplacement(
                 context,

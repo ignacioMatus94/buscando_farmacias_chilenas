@@ -55,7 +55,7 @@ class PantallaConfiguracionState extends State<PantallaConfiguracion> {
   Future<void> _persistirDatos() async {
     try {
       debugPrint('Intentando persistir datos...');
-      // Implementar lógica para persistir datos aquí
+      await _servicioBaseDatos.cargarDatosIniciales();
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Datos persistidos con éxito')),
@@ -106,6 +106,7 @@ class PantallaConfiguracionState extends State<PantallaConfiguracion> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Configuración'),
+        centerTitle: true,
         backgroundColor: CustomColors.primaryColor,
       ),
       drawer: const CustomDrawer(),

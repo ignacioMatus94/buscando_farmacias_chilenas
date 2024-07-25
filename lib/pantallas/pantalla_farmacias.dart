@@ -2,6 +2,7 @@ import 'package:buscando_farmacias_chilenas/pantallas/pantalla_detalles.dart';
 import 'package:buscando_farmacias_chilenas/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 import '../servicios/logica_principal.dart';
 import '../modelos/farmacias_informacion.dart';
 import '../modelos/historial.dart';
@@ -19,6 +20,7 @@ class PantallaFarmacias extends StatefulWidget {
 class PantallaFarmaciasState extends State<PantallaFarmacias> {
   final LogicaPrincipal _logicaPrincipal = LogicaPrincipal();
   final ServicioBaseDatos _servicioBaseDatos = ServicioBaseDatos();
+  final Logger logger = Logger();
   late Future<Map<String, Map<String, List<Farmacias_informacion>>>> _farmaciasAgrupadas;
   String? _selectedComuna;
   String? _selectedLocalidad;
@@ -26,27 +28,32 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
   @override
   void initState() {
     super.initState();
+    logger.d('Iniciando PantallaFarmacias');
     _farmaciasAgrupadas = _logicaPrincipal.cargarFarmaciasAgrupadas();
   }
 
-  void _guardarEnHistorial(Farmacias_informacion farmacia) async {
+  /// Guarda las farmacias visitadas en el historial.
+  void _guardarEnHistorial(List<Farmacias_informacion> farmacias) async {
     final now = DateTime.now();
     final fecha = '${now.year}-${now.month}-${now.day}';
     final hora = '${now.hour}:${now.minute}';
-    const accion = 'Visita a farmacia';
+    const accion = 'Visita a farmacias';
     final historial = Historial(
       id: 0,
-      idFarmacia: farmacia.localId,
+      idFarmacia: farmacias.map((f) => f.localId).join(','), // Concatenar IDs de farmacias
       accion: accion,
       fecha: fecha,
       hora: hora,
-      farmaciasInfo: [farmacia],
+      farmaciasInfo: farmacias,
     );
+    logger.d('Guardando en historial: ${historial.toJson()}');
     await _servicioBaseDatos.insertarHistorial(historial);
+    logger.d('Historial guardado');
   }
 
   @override
   Widget build(BuildContext context) {
+    logger.d('Construyendo PantallaFarmacias');
     return Scaffold(
       appBar: AppBar(
         title: const Text('Farmacias de Turno en Chile'),
@@ -64,8 +71,10 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
           future: _farmaciasAgrupadas,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
+              logger.d('Cargando datos de farmacias...');
               return const Center(child: CircularProgressIndicator());
             } else if (snapshot.hasError) {
+              logger.e('Error al cargar datos de farmacias: ${snapshot.error}');
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -77,9 +86,11 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
                 ),
               );
             } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+              logger.d('No hay farmacias de turno disponibles');
               return const Center(child: Text('No hay farmacias de turno disponibles'));
             } else {
               final comunas = snapshot.data!.keys.toList();
+              logger.d('Comunas cargadas: $comunas');
               return ListView(
                 padding: const EdgeInsets.all(16.0),
                 children: [
@@ -100,7 +111,9 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
     );
   }
 
+  /// Construye la lista de comunas disponibles.
   Widget _buildComunasList(List<String> comunas) {
+    logger.d('Construyendo lista de comunas');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -120,6 +133,7 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
               leading: const Icon(Icons.location_city, color: Colors.blueAccent),
               title: Text(comuna, style: GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.bold)),
               onTap: () {
+                logger.d('Comuna seleccionada: $comuna');
                 setState(() {
                   _selectedComuna = comuna;
                   _selectedLocalidad = null;
@@ -132,7 +146,9 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
     );
   }
 
+  /// Construye la lista de localidades dentro de la comuna seleccionada.
   List<Widget> _buildLocalidadesList(List<String> localidades) {
+    logger.d('Construyendo lista de localidades');
     return [
       ExpansionTile(
         title: Text(
@@ -151,6 +167,7 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
               leading: const Icon(Icons.place, color: Colors.green),
               title: Text(localidad, style: GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.bold)),
               onTap: () {
+                logger.d('Localidad seleccionada: $localidad');
                 setState(() {
                   _selectedLocalidad = localidad;
                 });
@@ -162,13 +179,15 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
     ];
   }
 
+  /// Construye la lista de farmacias dentro de la localidad seleccionada.
   Widget _buildFarmaciasList(List<Farmacias_informacion> farmacias) {
+    logger.d('Construyendo lista de farmacias en $_selectedLocalidad');
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Farmacias en $_selectedLocalidad:',
-          style: GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.bold),
+          style: GoogleFonts.roboto(fontSize: 22, fontWeight: FontWeight.bold, color: Colors.black),
         ),
         const SizedBox(height: 10),
         ...farmacias.map((farmacia) {
@@ -178,8 +197,10 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
     );
   }
 
+  /// Construye la tarjeta de información de una farmacia.
   Widget _buildFarmaciaCard(Farmacias_informacion farmacia) {
     bool estaAbierta = _estaAbierta(farmacia);
+    logger.d('Construyendo tarjeta para farmacia: ${farmacia.localNombre}, abierta: $estaAbierta');
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -209,7 +230,7 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
               '${farmacia.direccion}\n${farmacia.comunaNombre}',
               style: GoogleFonts.roboto(
                 fontSize: 16,
-                color: Colors.black54,
+                color: Colors.black,
               ),
             ),
             const SizedBox(height: 5),
@@ -217,18 +238,19 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
               'Abre: ${farmacia.funcionamientoHoraApertura} - Cierra: ${farmacia.funcionamientoHoraCierre}',
               style: GoogleFonts.roboto(
                 fontSize: 14,
-                color: Colors.black54,
+                color: Colors.black,
               ),
             ),
           ],
         ),
         isThreeLine: true,
         onTap: () {
-          _guardarEnHistorial(farmacia);
+          logger.d('Farmacia seleccionada: ${farmacia.localNombre}');
+          _guardarEnHistorial([farmacia]); // Cambiado para aceptar una lista de farmacias
           Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => PantallaDetalles(farmacia: farmacia, farmacias: const []),
+              builder: (context) => PantallaDetalles(farmacias: widget.farmaciasInfo, farmaciaSeleccionada: farmacia),
             ),
           );
         },
@@ -236,7 +258,9 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
     );
   }
 
+  /// Construye el botón de volver.
   Widget _buildBackButton() {
+    logger.d('Construyendo botón de volver');
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(15.0),
@@ -247,6 +271,7 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
         leading: const Icon(Icons.arrow_back, color: Colors.blue),
         title: const Text('Volver', style: TextStyle(color: Colors.blue, fontSize: 18)),
         onTap: () {
+          logger.d('Botón de volver presionado');
           setState(() {
             _selectedComuna = null;
             _selectedLocalidad = null;
@@ -256,6 +281,7 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
     );
   }
 
+  /// Verifica si una farmacia está abierta en función de la hora actual.
   bool _estaAbierta(Farmacias_informacion farmacia) {
     final ahora = TimeOfDay.now();
     final apertura = _parseHora(farmacia.funcionamientoHoraApertura);
@@ -271,6 +297,7 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
     return false;
   }
 
+  /// Parsea un string en formato 'HH:mm' a un objeto TimeOfDay.
   TimeOfDay? _parseHora(String hora) {
     try {
       final partes = hora.split(':');
@@ -278,6 +305,7 @@ class PantallaFarmaciasState extends State<PantallaFarmacias> {
       final minutos = int.parse(partes[1]);
       return TimeOfDay(hour: horas, minute: minutos);
     } catch (e) {
+      logger.e('Error al parsear hora: $hora, error: $e');
       return null;
     }
   }

@@ -9,14 +9,26 @@ class PantallaAbout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Acerca de'),
+        title: const Text('Acerca'),
+        centerTitle: true,
         backgroundColor: CustomColors.primaryColor,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [CustomColors.primaryColor, CustomColors.secondaryColor],
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+            ),
+          ),
+        ),
+        elevation: 4.0,
+        shadowColor: Colors.black54,
       ),
       drawer: const CustomDrawer(),
       body: Container(
         decoration: const BoxDecoration(
           gradient: LinearGradient(
-            colors: [CustomColors.backgroundColor, CustomColors.backgroundLight],
+            colors: [CustomColors.primaryColor, CustomColors.secondaryColor],
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
           ),

@@ -1,4 +1,3 @@
-// ignore: camel_case_types
 class Farmacias_informacion {
   final String localId;
   final String localNombre;

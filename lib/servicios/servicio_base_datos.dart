@@ -27,7 +27,6 @@ class ServicioBaseDatos {
   Future<Database> inicializarBaseDatos() async {
     final directory = await getApplicationDocumentsDirectory();
     final path = join(directory.path, 'farmacias_chilenas.db');
-    //await deleteDatabase(path);  // Elimina la base de datos existente para pruebas
     final db = await openDatabase(
       path,
       version: 3,
@@ -189,7 +188,7 @@ class ServicioBaseDatos {
         final Historial itemHistorial = Historial.fromJson(mapa);
         historial.add(itemHistorial.copyWith(farmaciasInfo: farmacias));
       }
-      debugPrint('Historial obtenido con éxito');
+      debugPrint('Historial obtenido con éxito: $historial');
       return historial;
     } catch (e) {
       debugPrint('Error al obtener historial: $e');
@@ -201,7 +200,7 @@ class ServicioBaseDatos {
     try {
       final db = await baseDatos;
       await db.insert('Historial', historial.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
-      debugPrint('Historial insertado: ${historial.id}');
+      debugPrint('Historial insertado: ${historial.toJson()}');
     } catch (e) {
       debugPrint('Error al insertar historial: $e');
       rethrow;
@@ -226,39 +225,6 @@ class ServicioBaseDatos {
       debugPrint('Todo el historial eliminado');
     } catch (e) {
       debugPrint('Error al eliminar todo el historial: $e');
-      rethrow;
-    }
-  }
-
-  Future<void> insertarHistorialPrueba() async {
-    try {
-      final db = await baseDatos;
-      final farmaciaPrueba = Farmacias_informacion(
-        localId: '1',
-        localNombre: 'Farmacia Prueba',
-        comunaNombre: 'Comuna Prueba',
-        localidadNombre: 'Localidad Prueba',
-        direccion: 'Dirección Prueba',
-        funcionamientoHoraApertura: '08:00',
-        funcionamientoHoraCierre: '20:00',
-        funcionamientoDia: 'Lunes a Domingo',
-        telefono: '123456789',
-        latitud: '-33.456',
-        longitud: '-70.648',
-      );
-
-      await db.insert('Farmacias', farmaciaPrueba.toJson(), conflictAlgorithm: ConflictAlgorithm.replace);
-
-      await db.insert('Historial', {
-        'idFarmacia': '1',
-        'accion': 'Búsqueda de prueba',
-        'fecha': '2023-07-12',
-        'hora': '14:00',
-        'farmaciasInfo': jsonEncode([farmaciaPrueba.toJson()]) // Asegúrate de que es una lista de farmacias
-      }, conflictAlgorithm: ConflictAlgorithm.replace);
-      debugPrint('Historial de prueba insertado');
-    } catch (e) {
-      debugPrint('Error al insertar historial de prueba: $e');
       rethrow;
     }
   }

@@ -1,3 +1,4 @@
+import 'package:buscando_farmacias_chilenas/utils/common_background.dart';
 import 'package:buscando_farmacias_chilenas/utils/custom_colors.dart';
 import 'package:buscando_farmacias_chilenas/widgets/custom_drawer.dart';
 import 'package:flutter/material.dart';
@@ -152,7 +153,7 @@ class PantallaPerfilState extends State<PantallaPerfil> {
                 const SizedBox(width: 10),
                 Text(
                   perfil.nombre,
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: Colors.black),
                 ),
               ],
             ),
@@ -163,7 +164,7 @@ class PantallaPerfilState extends State<PantallaPerfil> {
                 const SizedBox(width: 10),
                 Text(
                   perfil.correo,
-                  style: const TextStyle(fontSize: 18),
+                  style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black),
                 ),
               ],
             ),
@@ -204,16 +205,12 @@ class PantallaPerfilState extends State<PantallaPerfil> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Perfil del Usuario'),
+        centerTitle: true,
+        backgroundColor: CustomColors.primaryColor,
       ),
       drawer: const CustomDrawer(),
       body: Container(
-        decoration: const BoxDecoration(
-          gradient: LinearGradient(
-            colors: [CustomColors.primaryColor, CustomColors.secondaryColor],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          ),
-        ),
+        decoration: commonBackgroundDecoration,
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Column(

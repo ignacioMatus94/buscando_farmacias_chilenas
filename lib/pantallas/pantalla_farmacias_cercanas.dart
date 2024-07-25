@@ -24,7 +24,6 @@ class PantallaFarmaciasCercanasState extends State<PantallaFarmaciasCercanas> {
 
   Future<List<Farmacias_informacion>> _cargarFarmaciasCercanas() async {
     try {
-      await _servicioLocalizacion.insertarFarmaciasDePrueba();
       return await _servicioLocalizacion.farmaciasCercanas();
     } catch (e) {
       debugPrint('Error al cargar farmacias cercanas: $e');
@@ -48,42 +47,69 @@ class PantallaFarmaciasCercanasState extends State<PantallaFarmaciasCercanas> {
             return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             debugPrint('Error al obtener farmacias cercanas: ${snapshot.error}');
-            return Center(child: Text('Error: ${snapshot.error}'));
+            return Center(
+              child: Text(
+                'Error: ${snapshot.error}',
+                style: const TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18), // Texto en negro y negritas
+              ),
+            );
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
             debugPrint('No se encontraron farmacias cercanas.');
-            return const Center(child: Text('No se encontraron farmacias cercanas.'));
+            return const Center(
+              child: Text(
+                'No se encontraron farmacias cercanas.',
+                style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 18), // Texto en negro y negritas
+              ),
+            );
           } else {
             final farmacias = snapshot.data!;
             debugPrint('Farmacias cercanas encontradas: ${farmacias.length}');
-            return ListView.builder(
-              itemCount: farmacias.length,
-              itemBuilder: (context, index) {
-                final farmacia = farmacias[index];
-                return Card(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  elevation: 5,
-                  margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                  child: ListTile(
-                    contentPadding: const EdgeInsets.all(15.0),
-                    leading: const CircleAvatar(
-                      backgroundColor: CustomColors.primaryColor,
-                      radius: 30,
-                      child: Icon(Icons.local_pharmacy, size: 30, color: Colors.white),
+            return Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [CustomColors.backgroundColor, CustomColors.backgroundLight],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+              child: ListView.builder(
+                itemCount: farmacias.length,
+                itemBuilder: (context, index) {
+                  final farmacia = farmacias[index];
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15.0),
                     ),
-                    title: Text(
-                      farmacia.localNombre,
-                      style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+                    elevation: 5,
+                    margin: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+                    child: ListTile(
+                      contentPadding: const EdgeInsets.all(15.0),
+                      leading: const CircleAvatar(
+                        backgroundColor: CustomColors.primaryColor,
+                        radius: 30,
+                        child: Icon(Icons.local_pharmacy, size: 30, color: Colors.white),
+                      ),
+                      title: Text(
+                        farmacia.localNombre,
+                        style: const TextStyle(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      subtitle: Text(
+                        '${farmacia.direccion}\n${farmacia.comunaNombre}',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      onTap: () {
+                        debugPrint('Tapped on farmacia: ${farmacia.localNombre}');
+                        // Navegar a detalles de la farmacia si es necesario
+                      },
                     ),
-                    subtitle: Text('${farmacia.direccion}\n${farmacia.comunaNombre}'),
-                    onTap: () {
-                      debugPrint('Tapped on farmacia: ${farmacia.localNombre}');
-                      // Navegar a detalles de la farmacia si es necesario
-                    },
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             );
           }
         },

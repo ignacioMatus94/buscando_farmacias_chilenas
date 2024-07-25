@@ -23,7 +23,7 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace = "com.example.buscando_farmacias_chilenas"
+    namespace = "ignacio_matus.buscando_farmacias_chilenas"
     compileSdk = 34
     ndkVersion = flutter.ndkVersion
 
@@ -33,7 +33,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.buscando_farmacias_chilenas"
+        applicationId = "ignacio_matus.buscando_farmacias_chilenas"
         minSdk = 21
         targetSdk = 34
         versionCode = flutterVersionCode.toInteger()
