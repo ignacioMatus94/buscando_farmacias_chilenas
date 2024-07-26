@@ -1,4 +1,5 @@
 import 'package:buscando_farmacias_chilenas/pantallas/pantalla_principal.dart';
+import 'package:buscando_farmacias_chilenas/pantallas/pantalla_splash.dart';
 import 'package:buscando_farmacias_chilenas/utils/custom_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:buscando_farmacias_chilenas/servicios/servicio_base_datos.dart';
@@ -65,7 +66,7 @@ class MyApp extends StatelessWidget {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error al cargar la base de datos: ${snapshot.error}'));
           } else {
-            return const PantallaPrincipal();
+            return const PantallaSplash();
           }
         },
       ),

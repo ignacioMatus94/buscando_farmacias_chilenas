@@ -89,4 +89,4 @@ Estos requisitos aseguran que la aplicación "Buscando Farmacias Chilenas" sea f
 
 API TEST: https://drive.google.com/file/d/1IGz0DZzuFTY1V-LSj60ZxSiseX_SOjCd/view?usp=sharing
 
-VIDEO: 
+VIDEO: https://drive.google.com/file/d/1A50Q71xQH9EA6U4jT2jzm6yiurD4siqX/view?usp=sharing
